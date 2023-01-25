@@ -41,16 +41,21 @@ class MainTableViewController: UITableViewController {
         
         if isPossible(word: lowerAnswer) {
             if isOriginal(word: lowerAnswer) {
-                if isReal(word: lowerAnswer) {
-                    usedWords.insert(answer, at: 0)
-                    
-                    let indexPath = IndexPath(row: 0, section: 0)
-                    tableView.insertRows(at: [indexPath], with: .automatic)
-                    
-                    return
+                if !answer.isEmpty {
+                    if isReal(word: lowerAnswer) {
+                        usedWords.insert(answer, at: 0)
+                        
+                        let indexPath = IndexPath(row: 0, section: 0)
+                        tableView.insertRows(at: [indexPath], with: .automatic)
+                        
+                        return
+                    } else {
+                        errorTitle = "Нет такого слова!"
+                        errorMessage = "Попробуйте еще раз!"
+                    }
                 } else {
-                    errorTitle = "Нет такого слова!"
-                    errorMessage = "Попробуйте еще раз!"
+                    errorTitle = "Ошибка!"
+                    errorMessage = "Вы ввели пустое значение!"
                 }
             } else {
                 errorTitle = "Уже есть такое слово!"
