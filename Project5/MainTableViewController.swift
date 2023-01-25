@@ -36,41 +36,59 @@ class MainTableViewController: UITableViewController {
     private func submit(_ answer: String) {
         let lowerAnswer = answer.lowercased()
         
-        var errorTitle: String
-        var errorMessage: String
-        
-        if isPossible(word: lowerAnswer) {
+        if isCount(word: lowerAnswer) {
             if isOriginal(word: lowerAnswer) {
-                if !answer.isEmpty {
+                if isPossible(word: lowerAnswer) {
                     if isReal(word: lowerAnswer) {
-                        usedWords.insert(answer, at: 0)
+                        usedWords.insert(lowerAnswer, at: 0)
                         
                         let indexPath = IndexPath(row: 0, section: 0)
                         tableView.insertRows(at: [indexPath], with: .automatic)
                         
                         return
                     } else {
-                        errorTitle = "Нет такого слова!"
-                        errorMessage = "Попробуйте еще раз!"
+                        showAlertController(title: "Нет такого слова!", message: "Попробуй еще раз!")
                     }
                 } else {
-                    errorTitle = "Ошибка!"
-                    errorMessage = "Вы ввели пустое значение!"
+                    guard let title = title?.lowercased() else { return }
+                    showAlertController(title: "Ошибка!", message: "Мы не можем собрать это слово из \(title)")
                 }
             } else {
-                errorTitle = "Уже есть такое слово!"
-                errorMessage = "Будь оригинальнее!"
+                showAlertController(title: "Уже есть такое слово!", message: "Будь оригинальнее!")
             }
         } else {
-            guard let title = title?.lowercased() else { return }
-            errorTitle = "Ошибка!"
-            errorMessage = "Вы не можете собрать это слово из \(title)"
+            showAlertController(title: "Мало букв!", message: "Количество букв должно быть больше или равно трем!")
         }
-        
-        let alertController = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alertController, animated: true)
     }
+    
+    //        if isPossible(word: lowerAnswer) {
+    //            if isOriginal(word: lowerAnswer) {
+    //                if !answer.isEmpty {
+    //                    if isReal(word: lowerAnswer) {
+    //                        usedWords.insert(answer, at: 0)
+    //
+    //                        let indexPath = IndexPath(row: 0, section: 0)
+    //                        tableView.insertRows(at: [indexPath], with: .automatic)
+    //
+    //                        return
+    //                    } else {
+    //                        errorTitle = "Нет такого слова!"
+    //                        errorMessage = "Попробуйте еще раз!"
+    //                    }
+    //                } else {
+    //                    errorTitle = "Ошибка!"
+    //                    errorMessage = "Вы ввели пустое значение!"
+    //                }
+    //            } else {
+    //                errorTitle = "Уже есть такое слово!"
+    //                errorMessage = "Будь оригинальнее!"
+    //            }
+    //        } else {
+    //            guard let title = title?.lowercased() else { return }
+    //            errorTitle = "Ошибка!"
+    //            errorMessage = "Вы не можете собрать это слово из \(title)"
+    //        }
+    //    }
 }
 
 // MARK: -File Search
@@ -145,6 +163,19 @@ extension MainTableViewController {
                                                             wrap: false,
                                                             language: "ru")
         return misspelledRange.location == NSNotFound
+    }
+    
+    private func isCount(word: String) -> Bool {
+        word.count >= 3 ? true : false
+    }
+}
+
+// MARK: -AlertController
+extension MainTableViewController {
+    private func showAlertController(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alertController, animated: true)
     }
 }
 
