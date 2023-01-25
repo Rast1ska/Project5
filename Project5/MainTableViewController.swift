@@ -60,35 +60,6 @@ class MainTableViewController: UITableViewController {
             showAlertController(title: "Мало букв!", message: "Количество букв должно быть больше или равно трем!")
         }
     }
-    
-    //        if isPossible(word: lowerAnswer) {
-    //            if isOriginal(word: lowerAnswer) {
-    //                if !answer.isEmpty {
-    //                    if isReal(word: lowerAnswer) {
-    //                        usedWords.insert(answer, at: 0)
-    //
-    //                        let indexPath = IndexPath(row: 0, section: 0)
-    //                        tableView.insertRows(at: [indexPath], with: .automatic)
-    //
-    //                        return
-    //                    } else {
-    //                        errorTitle = "Нет такого слова!"
-    //                        errorMessage = "Попробуйте еще раз!"
-    //                    }
-    //                } else {
-    //                    errorTitle = "Ошибка!"
-    //                    errorMessage = "Вы ввели пустое значение!"
-    //                }
-    //            } else {
-    //                errorTitle = "Уже есть такое слово!"
-    //                errorMessage = "Будь оригинальнее!"
-    //            }
-    //        } else {
-    //            guard let title = title?.lowercased() else { return }
-    //            errorTitle = "Ошибка!"
-    //            errorMessage = "Вы не можете собрать это слово из \(title)"
-    //        }
-    //    }
 }
 
 // MARK: -File Search
@@ -121,6 +92,7 @@ extension MainTableViewController {
 extension MainTableViewController {
     private func setupNavController() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(promptForAnswer))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(refreshWord))
     }
     
     @objc func promptForAnswer() {
@@ -134,10 +106,17 @@ extension MainTableViewController {
         ac.addAction(submitAction)
         present(ac, animated: true)
     }
+    
+    @objc func refreshWord() {
+        title = allWords.randomElement()
+        usedWords.removeAll(keepingCapacity: true)
+        tableView.reloadData()
+    }
 }
 
 // MARK: -Check Valid Word
 extension MainTableViewController {
+    
     private func isPossible(word: String) -> Bool {
         guard var tempWord = title?.lowercased() else { return false }
         for letter in word {
@@ -179,4 +158,7 @@ extension MainTableViewController {
     }
 }
 
+// MARK: -RestartGame
+extension MainTableViewController {
+}
 
