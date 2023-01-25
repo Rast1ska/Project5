@@ -51,7 +51,7 @@ class MainTableViewController: UITableViewController {
                     }
                 } else {
                     guard let title = title?.lowercased() else { return }
-                    showAlertController(title: "Ошибка!", message: "Мы не можем собрать это слово из \(title)")
+                    showAlertController(title: "Ошибка!", message: "Мы не можем собрать это слово из \(title)!")
                 }
             } else {
                 showAlertController(title: "Уже есть такое слово!", message: "Будь оригинальнее!")
@@ -130,6 +130,8 @@ extension MainTableViewController {
     }
     
     private func isOriginal(word: String) -> Bool {
+        guard let tempWord = title?.lowercased() else { return false }
+        guard word != tempWord else { return false }
         return !usedWords.contains(word)
     }
     
